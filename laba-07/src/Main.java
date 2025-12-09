@@ -1,4 +1,3 @@
-
 import java.util.*;
 
 class Student {
@@ -67,29 +66,34 @@ class Institute {
 public class Main {
     public static void main(String[] args) {
 
-        // --- Дані з умови ---
+        // Створення тестових даних
         Student s1 = new Student("Олексій", "Ткаченко", "01832", 85);
+        Student s2 = new Student("Марія", "Коваленко", "01833", 97);
+        Student s3 = new Student("Іван", "Шевченко", "01834", 92);
+        Student s4 = new Student("Анна", "Бондаренко", "01835", 99);
 
         Faculty its = new Faculty("ІТС");
         its.addStudent(s1);
+        its.addStudent(s2);
+
+        Faculty fmм = new Faculty("ФММ");
+        fmм.addStudent(s3);
+        fmм.addStudent(s4);
 
         Institute kpi = new Institute("КПІ");
         kpi.addFaculty(its);
+        kpi.addFaculty(fmм);
 
-        // =========================
-        // 1) Порахувати загальну кількість студентів (тип ітератора b = for-each)
-        // =========================
+        // ========== ЗАВДАННЯ 1: for-each ==========
         int totalStudents = 0;
 
-        for (Faculty f : kpi.getFaculties()) {  // for-each
+        for (Faculty f : kpi.getFaculties()) {
             totalStudents += f.getStudents().size();
         }
 
         System.out.println("1) Загальна кількість студентів: " + totalStudents);
 
-        // =========================
-        // 2) Знайти факультет з найбільшою кількістю студентів (тип ітератора c = ListIterator)
-        // =========================
+        // ========== ЗАВДАННЯ 2: ListIterator (типізований) ==========
         Faculty maxFaculty = null;
         int maxCount = -1;
 
@@ -107,16 +111,17 @@ public class Main {
         System.out.println("2) Факультет з найбільшою кількістю студентів: " +
                 (maxFaculty != null ? maxFaculty.getName() : "немає"));
 
-        // =========================
-        // 3) Студенти з середнім балом у діапазоні 95..100 (тип ітератора a = Iterator)
-        // =========================
+        // ========== ЗАВДАННЯ 3: НЕТИПІЗОВАНИЙ Iterator ==========
         List<Student> bestStudents = new ArrayList<>();
 
         for (Faculty f : kpi.getFaculties()) {
-            Iterator<Student> studentIterator = f.getStudents().iterator(); // Iterator
+            @SuppressWarnings("unchecked")  
+            Iterator studentIterator = f.getStudents().iterator();
 
             while (studentIterator.hasNext()) {
-                Student st = studentIterator.next();
+                // Явне приведення типу (casting)
+                Student st = (Student) studentIterator.next();
+                
                 if (st.getAverageScore() >= 95 && st.getAverageScore() <= 100) {
                     bestStudents.add(st);
                 }
